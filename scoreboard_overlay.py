@@ -3,10 +3,11 @@
 # using ffmpeg commands (or moviepy?)
 
 source_video = "full_match.mp4"
-scoreboard_overlay = "scoreboard_overlay.png"
+scoreboard_overlay = "scoreboard_overlay.jpg"
 
 import os
-os.system('ffmpeg -version')
+import subprocess
+#os.system('ffmpeg -version')
 
 
 
@@ -16,14 +17,31 @@ os.system('ffmpeg -version')
 #
 # add some variables in later
 # (triple quotes = the 3rd type of quote)
-os.system('''ffmpeg -i full_match.mp4 -i scoreboard_overlay.png -filter_complex "[0:v][1:v] overlay=25:25:enable='between(t,0,5)'" -pix_fmt yuv420p -c:a copy output.mp4''')
+#os.system('''ffmpeg -i full_match.mp4 -i scoreboard_overlay.png -filter_complex "[0:v][1:v] overlay=25:25:enable='between(t,0,5)'" -pix_fmt yuv420p -c:a copy output.mp4''')
 
+# this is a "preview" without processing the video.
+# can we combine all of the edits into one script like this?
+# then auto play, just like a "non linear video editor"?
+#subprocess.Popen('''ffplay -i full_match.mp4 -vf "crop=in_w-100:in_h-100"''')
+
+
+p = subprocess.Popen('''ffmpeg -i full_match.mp4 -i scoreboard_overlay.jpg -filter_complex "[0:v][1:v] overlay=25:25:enable='between(t,0,5)'" -pix_fmt yuv420p -c:a copy output.mp4''', shell=True).wait()
 # how do you handle a prompt from cmd? "Overwrite video? type y/n..."
+'''if p.stdout.readline().rstrip() == "File 'output.mp4' already exists. Overwrite ? [y/N]":
+	p.communicate('y')[0].rstrip()'''
+# temporary:
+print("\n\n\n")
+print (p)
+print("\n\n\n")
+#Popen("y", shell=True).wait()
+
+print ("hi")
 
 #[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 # wait for process to finish first? search: "os.system wait for process"
-os.system('''ffplay output.mp4''')
-#
+subprocess.Popen('''ffplay output.mp4''', shell=True).wait()
+#[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
 '''
 1.5. make the graphics? (numbers, boxes, etc.)
 
